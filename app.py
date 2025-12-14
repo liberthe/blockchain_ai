@@ -251,7 +251,7 @@ elif "2." in role:
 
 # --- TAB 3: BANK ---
     def assess_risk(score, credit, duration, telco, social):
-    reasons = []
+        reasons = []
 
     if telco > 1200000:
         reasons.append("Chi tiêu viễn thông cao bất thường")
@@ -366,6 +366,7 @@ elif "4." in role:
     * **Blockchain:** Chỉ lưu mã Hash và Điểm số cuối cùng (Đảm bảo tính nhẹ, minh bạch và bảo mật).
 
     """)
+
 
 
 
