@@ -7,7 +7,8 @@ import time
 import graphviz
 from datetime import datetime
 from sklearn.ensemble import RandomForestClassifier
-
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, recall_score
 # ==========================================
 # 1. CẤU HÌNH & CSS (Làm đẹp giao diện)
 # ==========================================
@@ -71,9 +72,25 @@ def train_ai_model(df):
     features = st.session_state['feature_names']
     X = df[features]
     y = df['Target']
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X, y)
-    return model
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=np.random.randint(0, 1000)
+    )
+
+    model = RandomForestClassifier(
+        n_estimators=100,
+        random_state=42,
+        class_weight="balanced"
+    )
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    recall = recall_score(y_test, y_pred)
+
+    return model, acc, recall
+
 
 # ==========================================
 # 3. GIAO DIỆN CHÍNH (ĐÃ VIỆT HÓA)
@@ -107,10 +124,16 @@ if "1." in role:
             if st.button(" Huấn luyện lại Mô hình AI"):
                 with st.spinner("Đang chạy thuật toán Random Forest..."):
                     time.sleep(1) 
-                    model = train_ai_model(df)
+                    model, acc, recall = train_ai_model(df)
                     st.session_state['model'] = model
                     st.session_state['trained'] = True
-                st.success("Mô hình đã cập nhật! Độ chính xác: 94.2%")
+                    
+                    st.success(f"""
+                    Mô hình đã cập nhật:
+                    - Accuracy: {acc*100:.2f}%
+                    - Recall (Rủi ro cao): {recall*100:.2f}%
+                    """)
+
 
         st.markdown("---")
         st.subheader("Giả lập Người vay mới")
@@ -227,6 +250,33 @@ elif "2." in role:
             st.button(" Thu hồi quyền truy cập")
 
 # --- TAB 3: BANK ---
+    def assess_risk(score, credit, duration, telco, social):
+    reasons = []
+
+    if telco > 1200000:
+        reasons.append("Chi tiêu viễn thông cao bất thường")
+
+    if duration > 48:
+        reasons.append("Thời hạn vay dài")
+
+    if social < 50:
+        reasons.append("Điểm tín dụng xã hội thấp")
+
+    if credit > 15000:
+        reasons.append("Số tiền vay lớn")
+
+    if score >= 700:
+        level = "Thấp"
+        decision = "Duyệt tự động"
+    elif score >= 600:
+        level = "Trung bình"
+        decision = "Duyệt có điều kiện"
+    else:
+        level = "Cao"
+        decision = "Từ chối / Yêu cầu thế chấp"
+
+    return level, decision, reasons
+
 elif "3." in role:
     st.header(" Bảng điều khiển Rủi ro (Dành cho Ngân hàng)")
     target_user = st.text_input("Nhập Mã KH (UID) cần tra cứu")
@@ -238,8 +288,31 @@ elif "3." in role:
             
             if "Bank_A" in allowed:
                 score = st.session_state['credit_scores'].get(target_user)
+
+                    # giả lập lại dữ liệu đầu vào (demo)
+                    credit = 10000
+                    duration = 36
+                    telco = 900000
+                    social = 60
+                    
+                    level, decision, reasons = assess_risk(
+                        score, credit, duration, telco, social
+                    )
+
                 st.success("Truy cập được CHẤP NHẬN bởi Smart Contract!")
-                
+                   st.subheader("📊 Đánh giá Rủi ro Tín dụng")
+
+st.metric("Điểm tín dụng", score)
+st.write(f"**Mức rủi ro:** {level}")
+st.write(f"**Khuyến nghị:** {decision}")
+
+st.write("### ⚠️ Các yếu tố rủi ro chính")
+if reasons:
+    for r in reasons:
+        st.write(f"- {r}")
+else:
+    st.write("- Không phát hiện rủi ro đáng kể")
+
                 c1, c2 = st.columns([1, 2])
                 with c1:
                     st.image("https://cdn-icons-png.flaticon.com/512/3135/3135715.png", width=100)
@@ -255,6 +328,12 @@ elif "3." in role:
                         st.error("Khuyến nghị: **TỪ CHỐI / YÊU CẦU THẾ CHẤP**")
             else:
                 st.error(" TRUY CẬP BỊ TỪ CHỐI: Thiếu Token cấp quyền trên Blockchain.")
+                SimpleBlockchain.add_to_chain({
+    "event": "BANK_DECISION",
+    "user": target_user,
+    "risk_level": level,
+    "decision": decision
+})
 
 # --- TAB 4: NETWORK ---
 elif "4." in role:
@@ -287,5 +366,6 @@ elif "4." in role:
     * **Blockchain:** Chỉ lưu mã Hash và Điểm số cuối cùng (Đảm bảo tính nhẹ, minh bạch và bảo mật).
 
     """)
+
 
 
