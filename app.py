@@ -222,7 +222,7 @@ elif "2." in role:
                 SimpleBlockchain.add_to_chain({"event": "CAP_QUYEN", "user": user_input, "target": "Bank_A"})
                 if user_input not in st.session_state['access_rights']: st.session_state['access_rights'][user_input] = []
                 st.session_state['access_rights'][user_input].append("Bank_A")
-                st.toast("Đã cấp quyền thành công!", icon='')
+                st.toast("Đã cấp quyền thành công!")
         with c2:
             st.button(" Thu hồi quyền truy cập")
 
@@ -287,4 +287,5 @@ elif "4." in role:
     * **Blockchain:** Chỉ lưu mã Hash và Điểm số cuối cùng (Đảm bảo tính nhẹ, minh bạch và bảo mật).
 
     """)
+
 
