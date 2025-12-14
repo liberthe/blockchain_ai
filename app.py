@@ -78,7 +78,7 @@ def train_ai_model(df):
 # ==========================================
 # 3. GIAO DIỆN CHÍNH (ĐÃ VIỆT HÓA)
 # ==========================================
-st.title("🛡️ Hệ thống Chấm điểm Tín dụng Blockchain & AI")
+st.title(" Hệ thống Chấm điểm Tín dụng Blockchain & AI")
 st.markdown("### Ứng dụng Hợp đồng thông minh & Big Data trong quản lý rủi ro tín dụng")
 st.markdown("---")
 
@@ -86,14 +86,14 @@ df = load_data()
 
 # Menu bên trái (Sidebar)
 role = st.sidebar.radio("CHỌN VAI TRÒ TRUY CẬP:", 
-    ["1. ⚙️ Quản trị viên & AI (Admin)", 
-     "2. 👤 Người dùng (User App)", 
-     "3. 🏦 Ngân hàng (Bank Gateway)", 
-     "4. 🌐 Cấu trúc mạng lưới"])
+    ["1.  Quản trị viên & AI (Admin)", 
+     "2.  Người dùng (User App)", 
+     "3.  Ngân hàng (Bank Gateway)", 
+     "4.  Cấu trúc mạng lưới"])
 
 # --- TAB 1: ADMIN & AI CORE ---
 if "1." in role:
-    st.header("⚙️ Huấn luyện AI & Giả lập Dữ liệu")
+    st.header(" Huấn luyện AI & Giả lập Dữ liệu")
     
     col1, col2 = st.columns([1, 1.5])
     
@@ -104,7 +104,7 @@ if "1." in role:
             st.write(f"Số lượng bản ghi: **{df.shape[0]}**")
             st.write(f"Các trường thông tin: {st.session_state['feature_names']}")
             
-            if st.button("🚀 Huấn luyện lại Mô hình AI"):
+            if st.button(" Huấn luyện lại Mô hình AI"):
                 with st.spinner("Đang chạy thuật toán Random Forest..."):
                     time.sleep(1) 
                     model = train_ai_model(df)
@@ -122,7 +122,7 @@ if "1." in role:
             telco = st.slider("Cước viễn thông/tháng (VND)", 50000, 2000000, 500000)
             social = st.slider("Điểm tín dụng xã hội (Social Score)", 0, 100, 60)
             
-            submit = st.form_submit_button("⚡ Chấm điểm AI & Đóng gói Block")
+            submit = st.form_submit_button(" Chấm điểm AI & Đóng gói Block")
 
         if submit and st.session_state['trained']:
             # 1. HIỆU ỨNG MINING (Đào Block)
@@ -154,7 +154,7 @@ if "1." in role:
             st.success(f"Giao dịch đã xác nhận! ID Người dùng mới: {user_id}")
             
             # 3. BIỂU ĐỒ GIẢI THÍCH AI (XAI)
-            st.subheader("📊 Phân tích Quyết định của AI")
+            st.subheader(" Phân tích Quyết định của AI")
             st.write(f"AI Dự đoán điểm số: **{score}/850**")
             
             # --- MAKE-UP SỐ LIỆU CHO ĐẸP ---
@@ -205,7 +205,7 @@ if "1." in role:
 
 # --- TAB 2: USER ---
 elif "2." in role:
-    st.header("👤 Cổng thông tin Khách hàng (Giả lập Mobile App)")
+    st.header(" Cổng thông tin Khách hàng (Giả lập Mobile App)")
     user_input = st.selectbox("Chọn Định danh (ID) của bạn", list(st.session_state['credit_scores'].keys()))
     
     if user_input:
@@ -218,20 +218,20 @@ elif "2." in role:
         st.write("### Quản lý Quyền dữ liệu")
         c1, c2 = st.columns(2)
         with c1:
-            if st.button("✅ Cấp quyền xem cho Ngân Hàng A"):
+            if st.button("Cấp quyền xem cho Ngân Hàng A"):
                 SimpleBlockchain.add_to_chain({"event": "CAP_QUYEN", "user": user_input, "target": "Bank_A"})
                 if user_input not in st.session_state['access_rights']: st.session_state['access_rights'][user_input] = []
                 st.session_state['access_rights'][user_input].append("Bank_A")
-                st.toast("Đã cấp quyền thành công!", icon='🎉')
+                st.toast("Đã cấp quyền thành công!", icon='')
         with c2:
-            st.button("🚫 Thu hồi quyền truy cập")
+            st.button(" Thu hồi quyền truy cập")
 
 # --- TAB 3: BANK ---
 elif "3." in role:
-    st.header("🏦 Bảng điều khiển Rủi ro (Dành cho Ngân hàng)")
+    st.header(" Bảng điều khiển Rủi ro (Dành cho Ngân hàng)")
     target_user = st.text_input("Nhập Mã KH (UID) cần tra cứu")
     
-    if st.button("🔍 Truy vấn Hợp đồng Thông minh"):
+    if st.button(" Truy vấn Hợp đồng Thông minh"):
         with st.spinner("Đang xác thực Chữ ký số..."):
             time.sleep(1)
             allowed = st.session_state['access_rights'].get(target_user, [])
@@ -254,11 +254,11 @@ elif "3." in role:
                         st.progress(score/850)
                         st.error("Khuyến nghị: **TỪ CHỐI / YÊU CẦU THẾ CHẤP**")
             else:
-                st.error("⛔ TRUY CẬP BỊ TỪ CHỐI: Thiếu Token cấp quyền trên Blockchain.")
+                st.error(" TRUY CẬP BỊ TỪ CHỐI: Thiếu Token cấp quyền trên Blockchain.")
 
 # --- TAB 4: NETWORK ---
 elif "4." in role:
-    st.header("🌐 Sơ đồ Cấu trúc Mạng lưới")
+    st.header(" Sơ đồ Cấu trúc Mạng lưới")
     st.write("Trực quan hóa luồng dữ liệu giữa các thành phần trong hệ thống.")
     
     # Tạo sơ đồ mạng bằng Graphviz
@@ -285,4 +285,5 @@ elif "4." in role:
     * **Người dùng:** Là chủ sở hữu dữ liệu, cấp quyền thông qua Hợp đồng thông minh (Smart Contract).
     * **Máy AI:** Tính toán rủi ro Off-chain (ngoài chuỗi) để giảm tải cho Blockchain.
     * **Blockchain:** Chỉ lưu mã Hash và Điểm số cuối cùng (Đảm bảo tính nhẹ, minh bạch và bảo mật).
+
     """)
