@@ -188,7 +188,7 @@ if "1." in role:
             
             st.caption("Biểu đồ thể hiện trọng số các yếu tố tác động đến điểm tín dụng.")
     with col2:
-        st.subheader("⛓️ Sổ cái Blockchain (Thời gian thực)")
+        st.subheader(" Sổ cái Blockchain (Thời gian thực)")
         if st.session_state['blockchain']:
             chain_data = []
             for b in st.session_state['blockchain']:
@@ -287,3 +287,4 @@ elif "4." in role:
     * **Blockchain:** Chỉ lưu mã Hash và Điểm số cuối cùng (Đảm bảo tính nhẹ, minh bạch và bảo mật).
 
     """)
+
